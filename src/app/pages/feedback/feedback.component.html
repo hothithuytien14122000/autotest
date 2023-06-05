@@ -1,0 +1,93 @@
+<section class="mx-3">
+  <div class="bg-white max-w-[1140px] mx-auto -intro-x">
+    <div class="w-full flex justify-between pt-8">
+      <h2 class="text-2xl font-medium">{{ 'routes.admin.feedback.feedback-list' | translate }}</h2>
+    </div>
+    <div class="flex my-5 flex-wrap lg:justify-start justify-center gap-3">
+        <div class="space-y-1">
+          <label class="text-gray-700 font-medium">{{ 'routes.admin.order.search' | translate }}</label><br/>
+          <div class="relative w-fit">
+            <input
+              class="md:w-56 w-72 h-8 rounded-md text-gray-700 bg-white border border-solid border-gray-200 pr-9 pl-2 outline-blue-400"
+              [(ngModel)]="tableOrders.search"
+              (change)="tableOrders.searchFull()"
+              type="text"
+              placeholder="{{ 'routes.admin.order.search_by_name_description' | translate }}"
+            />
+  
+            <i class="text-lg las la-search absolute top-1/2 -translate-y-1/2 right-2 z-[1]"></i>
+          </div>
+        </div>
+        
+        <div class="space-y-1">
+          <label class="text-gray-700 font-medium">Loại phản hồi</label><br/>
+          <nz-select
+            class="w-44"
+            nzAllowClear
+            nzPlaceHolder="{{ 'routes.admin.order.choose' | translate }}"
+            [(ngModel)]="tableOrders.paramTable.filter.MedicalProcedureGroupCode"
+            (ngModelChange)="tableOrders.filter('MedicalProcedureGroupCode', null, $event)"
+          >
+            <nz-option
+              *ngFor="let item of (codeTypesFacade.pagination$ | async)?.content"
+              [nzValue]="item.code"
+              [nzLabel]="item.title"
+            ></nz-option>
+          </nz-select>
+        </div>
+        <div class="space-y-1">
+          <label class="text-gray-700 font-medium"
+            >cấp độ đánh giá (0 - 5 <i class="lar la-star"></i>)</label
+          ><br />
+          <!-- <nz-slider
+            class="w-72 block"
+            nzRange
+            nzDots
+            [nzMax]="10000000"
+            [nzMarks]="marks"
+            [nzTipFormatter]="tipFormatter"
+            [(ngModel)]="tableMedicalProcedure.paramTable.filter.PriceRange"
+            (nzOnAfterChange)="onAfterChange($event)"
+          ></nz-slider> -->
+        </div>
+      </div>
+  </div>
+</section>
+
+<section class="mx-3 bg-gray-100 rounded-tl-xl rounded-tr-xl py-3">
+  <div class="h-[calc(100vh-340px)] max-w-[1246px] mx-auto overflow-y-auto mt-2 pb-0.5 px-2 intro-x">
+    <div class="w-[1206px] overflow-x-auto">
+      <g-datatable #tableOrders  [columns]="columnsTable"
+        [loading]="OrdersFacade.isLoading$ | async" [data]="(OrdersFacade.paginationFeedBack$ | async)?.content"
+        [total]="(OrdersFacade.paginationFeedBack$ | async)?.totalElements" [showPagination]="true" [showSearch]="false"
+        (ngChange)="OrdersFacade.getFeedBack($event)">
+        <ng-template #orderNo let-data>
+          <p
+            #orderNo
+            nz-tooltip
+            class="text-blue-800 hover:text-blue-600 font-medium truncate cursor-pointer"
+            (click)="router.navigate(['feedback/detail', data.id])"
+          >
+            {{ data.orderNo }}
+          </p>
+        </ng-template>
+        <ng-template #implementationDate let-data>
+          <p class="text-blue-800 font-medium truncate">
+            {{ transform(data.implementationDate)}}
+          </p>
+        </ng-template>
+        <ng-template #address let-data>
+          <div class="text-left">
+            <p class="font-medium">{{data.clinicName}}</p>
+            <p class="truncate-2">{{data.address}}</p>
+          </div>
+        </ng-template>
+        <ng-template #finishDay let-data>
+          <p class="text-blue-800 font-medium truncate">
+            {{ transformTimeDay(data?.receivedOnDate)}}
+          </p>
+        </ng-template>
+      </g-datatable>
+    </div>
+  </div>
+</section>

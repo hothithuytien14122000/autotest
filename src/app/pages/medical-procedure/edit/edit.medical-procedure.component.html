@@ -1,0 +1,21 @@
+<section class="mx-3 mt-3 -intro-x" *ngIf="codeTypesFacade.status$ | async">
+  <div class="py-3 bg-gray-100 min-h-[calc(100vh-108px)] rounded-tl-xl rounded-tr-xl">
+    <div class="min-700-scroll bg-white mx-auto p-5 rounded-md">
+      <h2 class="mb-6 font-semibold text-xl">
+        {{
+          ((medicalProcedureFacade.data$ | async)
+            ? 'routes.admin.medical-procedure.edit_trick'
+            : 'routes.admin.medical-procedure.add_trick'
+          ) | translate
+        }}
+      </h2>
+      <g-form
+        [columns]="columnsForm"
+        [values]="medicalProcedureFacade.data$ | async"
+        [textSubmit]="'routes.admin.medical-procedure.save_trick' | translate"
+        (handBack)="handleBack()"
+        (handSubmit)="handelSubmit($event)"
+      ></g-form>
+    </div>
+  </div>
+</section>

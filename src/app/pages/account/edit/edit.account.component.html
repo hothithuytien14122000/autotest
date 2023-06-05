@@ -1,0 +1,33 @@
+<div class="flex pt-10 py-5 px-2.5 bg-white intro-x" *ngIf="userFacade.status$ | async">
+  <div class="w-[770px] mx-auto flex gap-4">
+    <button (click)="handleBack()">
+      <i class="las la-arrow-left text-2xl text-blue-500"></i>
+    </button>
+    <h2 class="text-2xl font-semibold">
+      {{
+        (id
+          ? isCustomer
+            ? 'routes.admin.user.editCustomerInfomation'
+            : 'routes.admin.user.editInternalAccount'
+          : isCustomer
+          ? 'routes.admin.user.createCustomerInfomation'
+          : 'routes.admin.user.createInfomation'
+        ) | translate
+      }}
+    </h2>
+  </div>
+</div>
+<div class="mx-3 min-h-[calc(100vh-128px)] bg-gray-100 rounded-tl-xl rounded-tr-xl p-5">
+  <div class="w-[700px] bg-white mx-auto p-5 rounded-md shadow-xl mb-5 -intro-x">
+    <p class="font-medium text-black text-lg mb-3">{{ 'routes.admin.user.infomation' | translate }}</p>
+    <g-form
+      #form
+      [loading]="userFacade.isLoading$ | async"
+      [columns]="columnsForm"
+      [values]="!id ? null : (userFacade.data$ | async)"
+      [textSubmit]="'components.form.save' | translate"
+      (handSubmit)="handleSubmit($event)"
+      (handBack)="handleBack()"
+    ></g-form>
+  </div>
+</div>
